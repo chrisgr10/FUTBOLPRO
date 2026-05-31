@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FutbolPro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+  <style>
+    /* ===== VARIABLES ===== */
+    :root {
+      --green: #00C853;
+      --green-dark: #00952e;
+      --green-neon: #39FF14;
+      --black: #0A0A0A;
+      --dark: #111318;
+      --card: #181c24;
+      --card2: #1e2330;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8ecf0;
+      --muted: #7a8494;
+      --red: #FF3B30;
+      --yellow: #FFD600;
+      --blue: #2979FF;
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ===== UTILITIES ===== */
+    .hidden { display: none !important; }
+    .screen { min-height: 100vh; }
+
+    /* ===== LOGIN SCREEN ===== */
+    #screen-login {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #0d1a12 0%, #0a0f1a 60%, #0a0a0a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #screen-login::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,200,83,0.13) 0%, transparent 70%);
+      top: -150px; left: -100px;
+      pointer-events: none;
+    }
+    #screen-login::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(41,121,255,0.09) 0%, transparent 70%);
+      bottom: -80px; right: -60px;
+      pointer-events: none;
+    }
+
+    .login-box {
+      background: rgba(24,28,36,0.95);
+      border: 1px solid rgba(0,200,83,0.18);
+      border-radius: 24px;
+      padding: 48px 40px 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,200,83,0.07);
+      position: relative;
+      z-index: 1;
+      animation: fadeUp 0.6s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .login-logo .ball {
+      font-size: 52px;
+      display: block;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 0 18px rgba(0,200,83,0.5));
+    }
+    .login-logo h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #00C853, #39FF14);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    .login-logo p {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .form-group input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(0,200,83,0.12);
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      border: none;
+      border-radius: 12px;
+      color: #000;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      margin-top: 8px;
+      box-shadow: 0 4px 20px rgba(0,200,83,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0,200,83,0.45);
+    }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .login-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .login-footer a {
+      color: var(--green);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .login-footer a:hover { text-decoration: underline; }
+
+    #login-error {
+      background: rgba(255,59,48,0.12);
+      border: 1px solid rgba(255,59,48,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #ff6b63;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    /* ===== REGISTER SCREEN ===== */
+    #screen-register {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #0d1a12 0%, #0a0f1a 60%, #0a0a0a 100%);
+    }
+    .register-box {
+      background: rgba(24,28,36,0.97);
+      border: 1px solid rgba(0,200,83,0.15);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      animation: fadeUp 0.5s ease;
+    }
+    .register-box h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 3px;
+      color: var(--green);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* ===== MAIN APP ===== */
+    #screen-app { display: none; flex-direction: column; min-height: 100vh; }
+    #screen-app.active { display: flex; }
+
+    /* TOP BAR */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .topbar-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 3px;
+      background: linear-gradient(135deg, #00C853, #39FF14);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .topbar-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 15px; color: #fff;
+    }
+    .topbar-name { font-size: 14px; font-weight: 600; }
+
+    /* PAGE CONTENT */
+    .page-content {
+      flex: 1;
+      padding: 20px 16px 90px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; animation: fadeUp 0.35s ease; }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(17,19,24,0.97);
+      backdrop-filter: blur(18px);
+      border-top: 1px solid var(--border);
+      display: flex;
+      z-index: 100;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 4px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      gap: 3px;
+      border: none;
+      background: none;
+      color: var(--muted);
+    }
+    .nav-item .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-item .nav-label { font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+    .nav-item.active { color: var(--green); }
+    .nav-item.active .nav-icon { filter: drop-shadow(0 0 6px var(--green)); }
+
+    /* ===== SECTION HEADERS ===== */
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ===== BADGES ===== */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .badge-green { background: rgba(0,200,83,0.15); color: var(--green); }
+    .badge-red { background: rgba(255,59,48,0.15); color: var(--red); }
+    .badge-yellow { background: rgba(255,214,0,0.15); color: var(--yellow); }
+    .badge-blue { background: rgba(41,121,255,0.15); color: var(--blue); }
+
+    /* ===== HOME PAGE ===== */
+    .hero-banner {
+      background: linear-gradient(135deg, #0d2b1a, #0f1e33);
+      border: 1px solid rgba(0,200,83,0.2);
+      border-radius: 20px;
+      padding: 24px 20px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::after {
+      content: '⚽';
+      position: absolute;
+      right: -10px; bottom: -10px;
+      font-size: 90px;
+      opacity: 0.07;
+    }
+    .hero-greeting { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+    .hero-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #fff, #00C853);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 2px 0 8px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 20px;
+      margin-top: 14px;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      color: var(--green);
+      line-height: 1;
+    }
+    .hero-stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .quick-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .quick-card:hover { border-color: var(--green); transform: translateY(-2px); }
+    .quick-card-icon { font-size: 28px; margin-bottom: 8px; }
+    .quick-card-label { font-size: 13px; font-weight: 600; }
+    .quick-card-count { font-size: 11px; color: var(--muted); }
+
+    /* ===== TRAINING PAGE ===== */
+    .training-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+    }
+    .training-item:hover { border-color: rgba(0,200,83,0.3); }
+    .training-date-box {
+      background: rgba(0,200,83,0.1);
+      border: 1px solid rgba(0,200,83,0.2);
+      border-radius: 10px;
+      width: 46px; height: 52px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .training-day {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--green);
+      line-height: 1;
+    }
+    .training-month { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+    .training-info { flex: 1; }
+    .training-name { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+    .training-time { font-size: 12px; color: var(--muted); }
+
+    /* ===== MATCHES PAGE ===== */
+    .match-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+    .match-teams {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 12px 0;
+    }
+    .match-team { text-align: center; flex: 1; }
+    .match-team-name { font-weight: 700; font-size: 15px; }
+    .match-team-badge { font-size: 30px; margin-bottom: 4px; }
+    .match-score {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 42px;
+      color: var(--green);
+      letter-spacing: 4px;
+      text-align: center;
+      padding: 0 12px;
+    }
+    .match-score.upcoming { font-size: 24px; color: var(--muted); }
+    .match-meta { font-size: 12px; color: var(--muted); }
+    .match-date { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+
+    /* RESULT FORM */
+    .result-form {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    .result-form h3 { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--green); }
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .mini-input {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 13px;
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+    .mini-input:focus { border-color: var(--green); }
+    .mini-input::placeholder { color: var(--muted); }
+    .btn-save {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      border: none;
+      border-radius: 10px;
+      padding: 11px 20px;
+      color: #000;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      width: 100%;
+    }
+    .btn-save:hover { opacity: 0.88; transform: translateY(-1px); }
+
+    /* ===== STATS PAGE ===== */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 16px;
+      text-align: center;
+    }
+    .stat-card-icon { font-size: 24px; margin-bottom: 6px; }
+    .stat-card-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 40px;
+      line-height: 1;
+      color: var(--green);
+    }
+    .stat-card-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+    .progress-item { margin-bottom: 16px; }
+    .progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+    .progress-label { font-size: 13px; font-weight: 600; }
+    .progress-value { font-size: 13px; color: var(--green); font-weight: 700; }
+    .progress-bar {
+      height: 7px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--green), var(--green-neon));
+      transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ===== PROFILE PAGE ===== */
+    .profile-header {
+      text-align: center;
+      padding: 24px 0 20px;
+      margin-bottom: 20px;
+    }
+    .profile-avatar {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 36px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 auto 14px;
+      box-shadow: 0 0 0 4px rgba(0,200,83,0.2);
+    }
+    .profile-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 30px;
+      letter-spacing: 2px;
+    }
+    .profile-pos { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+    .profile-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .profile-row:last-child { border-bottom: none; }
+    .profile-row-icon { font-size: 20px; width: 24px; text-align: center; }
+    .profile-row-label { font-size: 13px; color: var(--muted); }
+    .profile-row-value { font-size: 14px; font-weight: 600; margin-top: 1px; }
+
+    .btn-logout {
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      background: rgba(255,59,48,0.1);
+      border: 1px solid rgba(255,59,48,0.25);
+      border-radius: 12px;
+      color: var(--red);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-logout:hover { background: rgba(255,59,48,0.18); }
+
+    /* ===== WATER / HEALTH REMINDER ===== */
+    .reminder-strip {
+      background: linear-gradient(135deg, rgba(41,121,255,0.12), rgba(0,200,83,0.08));
+      border: 1px solid rgba(41,121,255,0.2);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .reminder-strip .r-icon { font-size: 24px; }
+    .reminder-strip .r-text { font-size: 13px; }
+    .reminder-strip .r-title { font-weight: 700; font-size: 14px; }
+
+    /* ===== TOAST ===== */
+    #toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green);
+      color: #000;
+      padding: 10px 22px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #2a2e38; border-radius: 3px; }
+
+    select.mini-input { appearance: none; }
+    textarea.mini-input { resize: vertical; min-height: 70px; }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="screen-login" class="screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <span class="ball">⚽</span>
+      <h1>FutbolPro</h1>
+      <p>Tu app de fútbol personal</p>
+    </div>
+    <div id="login-error" class="hidden"></div>
+    <div class="form-group">
+      <label>Usuario / Correo</label>
+      <input type="text" id="login-user" placeholder="jugador@correo.com" autocomplete="username" />
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Iniciar Sesión</button>
+    <div class="login-footer">
+      ¿No tienes cuenta? <a onclick="showScreen('register')">Regístrate</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REGISTER SCREEN ===== -->
+<div id="screen-register" class="screen hidden">
+  <div class="register-box">
+    <h2>⚽ Crear Cuenta</h2>
+    <div class="form-group">
+      <label>Nombre completo</label>
+      <input type="text" id="reg-name" placeholder="Ej. Carlos Ramírez" />
+    </div>
+    <div class="form-group">
+      <label>Correo electrónico</label>
+      <input type="email" id="reg-email" placeholder="correo@ejemplo.com" />
+    </div>
+    <div class="form-group">
+      <label>Posición</label>
+      <select id="reg-pos" class="form-group mini-input" style="padding:14px 16px; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; color:var(--text); font-size:15px; width:100%; outline:none;">
+        <option value="">Selecciona tu posición</option>
+        <option>Portero</option><option>Defensa</option>
+        <option>Centrocampista</option><option>Delantero</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Contraseña</label>
+      <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" />
+    </div>
+    <button class="btn-primary" onclick="doRegister()">Crear Cuenta</button>
+    <div class="login-footer" style="margin-top:16px;">
+      ¿Ya tienes cuenta? <a onclick="showScreen('login')">Inicia sesión</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="screen-app" class="screen">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">⚽ FutbolPro</div>
+    <div class="topbar-user">
+      <div class="topbar-avatar" id="top-avatar">J</div>
+      <span class="topbar-name" id="top-name">Jugador</span>
+    </div>
+  </div>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+
+    <!-- HOME PAGE -->
+    <div id="page-home" class="page active">
+      <div class="hero-banner">
+        <div class="hero-greeting">Bienvenido de vuelta</div>
+        <div class="hero-name" id="hero-name">Jugador</div>
+        <span class="badge badge-green" id="hero-pos">Delantero</span>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num" id="hs-goles">0</div>
+            <div class="hero-stat-label">Goles</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num" id="hs-asist">0</div>
+            <div class="hero-stat-label">Asist.</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num" id="hs-partidos">0</div>
+            <div class="hero-stat-label">Partidos</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-num" id="hs-mins">0</div>
+            <div class="hero-stat-label">Minutos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Water reminder -->
+      <div class="reminder-strip">
+        <div class="r-icon">💧</div>
+        <div>
+          <div class="r-title">Hidratación</div>
+          <div class="r-text">¡Recuerda tomar agua antes del entrenamiento!</div>
+        </div>
+      </div>
+
+      <div class="quick-grid">
+        <div class="quick-card" onclick="goToPage('entrenamientos')">
+          <div class="quick-card-icon">🏃</div>
+          <div class="quick-card-label">Entrenamientos</div>
+          <div class="quick-card-count" id="qc-trainings">Ver calendario</div>
+        </div>
+        <div class="quick-card" onclick="goToPage('partidos')">
+          <div class="quick-card-icon">⚽</div>
+          <div class="quick-card-label">Partidos</div>
+          <div class="quick-card-count" id="qc-matches">Ver resultados</div>
+        </div>
+        <div class="quick-card" onclick="goToPage('estadisticas')">
+          <div class="quick-card-icon">📊</div>
+          <div class="quick-card-label">Estadísticas</div>
+          <div class="quick-card-count">Mi rendimiento</div>
+        </div>
+        <div class="quick-card" onclick="goToPage('perfil')">
+          <div class="quick-card-icon">👤</div>
+          <div class="quick-card-label">Perfil</div>
+          <div class="quick-card-count">Mi información</div>
+        </div>
+      </div>
+
+      <!-- Próximo evento -->
+      <div class="section-title">Próximo Evento</div>
+      <div class="card" id="next-event">
+        <div style="color:var(--muted); font-size:13px;">No hay eventos próximos. Agrega uno desde Entrenamientos o Partidos.</div>
+      </div>
+    </div>
+
+    <!-- ENTRENAMIENTOS PAGE -->
+    <div id="page-entrenamientos" class="page">
+      <div class="section-title">Mis Entrenamientos</div>
+      <div class="section-sub">Calendario y rutinas del equipo</div>
+
+      <div class="result-form">
+        <h3>+ Agregar Entrenamiento</h3>
+        <div class="input-row">
+          <input class="mini-input" type="text" id="t-nombre" placeholder="Nombre (ej. Táctica)" />
+          <input class="mini-input" type="date" id="t-fecha" />
+        </div>
+        <div class="input-row">
+          <input class="mini-input" type="time" id="t-hora" />
+          <select class="mini-input" id="t-tipo">
+            <option value="">Tipo</option>
+            <option>Físico</option><option>Táctica</option>
+            <option>Técnica</option><option>Partido amistoso</option>
+          </select>
+        </div>
+        <textarea class="mini-input" id="t-notas" placeholder="Notas del entrenamiento..." style="margin-bottom:10px;"></textarea>
+        <button class="btn-save" onclick="addTraining()">Guardar Entrenamiento</button>
+      </div>
+
+      <div class="section-title" style="font-size:20px;margin-bottom:12px;">Calendario</div>
+      <div id="training-list">
+        <div style="color:var(--muted); font-size:13px; padding:10px;">Aún no hay entrenamientos registrados.</div>
+      </div>
+    </div>
+
+    <!-- PARTIDOS PAGE -->
+    <div id="page-partidos" class="page">
+      <div class="section-title">Mis Partidos</div>
+      <div class="section-sub">Resultados y próximos encuentros</div>
+
+      <div class="result-form">
+        <h3>📋 Registrar Resultado</h3>
+        <div class="input-row">
+          <input class="mini-input" type="text" id="m-rival" placeholder="Rival (ej. Tigres)" />
+          <input class="mini-input" type="date" id="m-fecha" />
+        </div>
+        <div class="input-row">
+          <input class="mini-input" type="number" id="m-goles-f" placeholder="Goles a favor" min="0" />
+          <input class="mini-input" type="number" id="m-goles-c" placeholder="Goles en contra" min="0" />
+        </div>
+        <div class="input-row">
+          <input class="mini-input" type="number" id="m-mis-goles" placeholder="Mis goles" min="0" />
+          <input class="mini-input" type="number" id="m-asist" placeholder="Mis asistencias" min="0" />
+        </div>
+        <div class="input-row">
+          <input class="mini-input" type="number" id="m-mins" placeholder="Minutos jugados" min="0" max="120" />
+          <select class="mini-input" id="m-tarjeta">
+            <option value="ninguna">Sin tarjeta</option>
+            <option value="amarilla">🟡 Amarilla</option>
+            <option value="roja">🔴 Roja</option>
+          </select>
+        </div>
+        <button class="btn-save" onclick="addMatch()">Registrar Partido</button>
+      </div>
+
+      <div class="section-title" style="font-size:20px;margin-bottom:12px;">Historial</div>
+      <div id="match-list">
+        <div style="color:var(--muted); font-size:13px; padding:10px;">Aún no hay partidos registrados.</div>
+      </div>
+    </div>
+
+    <!-- ESTADÍSTICAS PAGE -->
+    <div id="page-estadisticas" class="page">
+      <div class="section-title">Estadísticas</div>
+      <div class="section-sub">Tu rendimiento esta temporada</div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-icon">⚽</div>
+          <div class="stat-card-num" id="st-goles">0</div>
+          <div class="stat-card-label">Goles</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">🎯</div>
+          <div class="stat-card-num" id="st-asist">0</div>
+          <div class="stat-card-label">Asistencias</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">⏱️</div>
+          <div class="stat-card-num" id="st-mins">0</div>
+          <div class="stat-card-label">Minutos</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">🏆</div>
+          <div class="stat-card-num" id="st-victorias">0</div>
+          <div class="stat-card-label">Victorias</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Rendimiento</div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span class="progress-label">⚽ Goles por partido</span>
+            <span class="progress-value" id="pg-goles">0.0</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="pb-goles" style="width:0%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span class="progress-label">🎯 Asistencias por partido</span>
+            <span class="progress-value" id="pg-asist">0.0</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="pb-asist" style="width:0%; background: linear-gradient(90deg,#2979FF,#64B5F6)"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-header">
+            <span class="progress-label">🏆 % Victorias</span>
+            <span class="progress-value" id="pg-wins">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="pb-wins" style="width:0%; background: linear-gradient(90deg,#FFD600,#FF9800)"></div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px;">Tarjetas</div>
+        <div style="display:flex; gap:20px;">
+          <div>
+            <span style="font-size:22px;">🟡</span>
+            <span class="stat-card-num" id="st-amarillas" style="font-size:28px; margin-left:6px;">0</span>
+            <div style="font-size:12px; color:var(--muted);">Amarillas</div>
+          </div>
+          <div>
+            <span style="font-size:22px;">🔴</span>
+            <span class="stat-card-num" id="st-rojas" style="font-size:28px; margin-left:6px; color:var(--red);">0</span>
+            <div style="font-size:12px; color:var(--muted);">Rojas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERFIL PAGE -->
+    <div id="page-perfil" class="page">
+      <div class="section-title">Perfil</div>
+      <div class="profile-header">
+        <div class="profile-avatar" id="pf-avatar">J</div>
+        <div class="profile-name" id="pf-name">Jugador</div>
+        <div class="profile-pos" id="pf-pos">Posición</div>
+      </div>
+
+      <div class="card">
+        <div class="profile-row">
+          <div class="profile-row-icon">✉️</div>
+          <div>
+            <div class="profile-row-label">Correo</div>
+            <div class="profile-row-value" id="pf-email">—</div>
+          </div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-row-icon">⚽</div>
+          <div>
+            <div class="profile-row-label">Posición</div>
+            <div class="profile-row-value" id="pf-pos2">—</div>
+          </div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-row-icon">📅</div>
+          <div>
+            <div class="profile-row-label">Entrenamientos</div>
+            <div class="profile-row-value" id="pf-trainings">0</div>
+          </div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-row-icon">🏟️</div>
+          <div>
+            <div class="profile-row-label">Partidos jugados</div>
+            <div class="profile-row-value" id="pf-matches">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fit Soccer: salud -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:14px;">💧 Salud & Bienestar</div>
+        <div class="reminder-strip" style="margin-bottom:10px;">
+          <div class="r-icon">💧</div>
+          <div><div class="r-title">Hidratación</div><div class="r-text">Bebe 2-3 litros de agua al día</div></div>
+        </div>
+        <div class="reminder-strip" style="margin-bottom:10px; background:linear-gradient(135deg,rgba(255,214,0,0.08),rgba(255,152,0,0.08)); border-color:rgba(255,214,0,0.2);">
+          <div class="r-icon">🍌</div>
+          <div><div class="r-title">Alimentación</div><div class="r-text">Come carbohidratos 2h antes del partido</div></div>
+        </div>
+        <div class="reminder-strip" style="background:linear-gradient(135deg,rgba(41,121,255,0.08),rgba(0,200,83,0.05)); border-color:rgba(41,121,255,0.2);">
+          <div class="r-icon">😴</div>
+          <div><div class="r-title">Sueño</div><div class="r-text">Duerme al menos 8 horas la noche anterior</div></div>
+        </div>
+      </div>
+
+      <button class="btn-logout" onclick="doLogout()">🚪 Cerrar Sesión</button>
+    </div>
+
+  </div><!-- end page-content -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="goToPage('home')" id="nav-home">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Inicio</span>
+    </button>
+    <button class="nav-item" onclick="goToPage('entrenamientos')" id="nav-entrenamientos">
+      <span class="nav-icon">🏃</span>
+      <span class="nav-label">Entrenos</span>
+    </button>
+    <button class="nav-item" onclick="goToPage('partidos')" id="nav-partidos">
+      <span class="nav-icon">⚽</span>
+      <span class="nav-label">Partidos</span>
+    </button>
+    <button class="nav-item" onclick="goToPage('estadisticas')" id="nav-estadisticas">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Stats</span>
+    </button>
+    <button class="nav-item" onclick="goToPage('perfil')" id="nav-perfil">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Perfil</span>
+    </button>
+  </nav>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+  // ===== STATE =====
+  let state = {
+    users: JSON.parse(localStorage.getItem('fp_users') || '{}'),
+    currentUser: null,
+    trainings: [],
+    matches: []
+  };
+
+  // ===== HELPERS =====
+  function saveUsers() { localStorage.setItem('fp_users', JSON.stringify(state.users)); }
+  function saveData() {
+    if (!state.currentUser) return;
+    const key = 'fp_data_' + state.currentUser;
+    localStorage.setItem(key, JSON.stringify({ trainings: state.trainings, matches: state.matches }));
+  }
+  function loadData() {
+    const key = 'fp_data_' + state.currentUser;
+    const d = JSON.parse(localStorage.getItem(key) || 'null');
+    if (d) { state.trainings = d.trainings || []; state.matches = d.matches || []; }
+    else { state.trainings = []; state.matches = []; }
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function showScreen(name) {
+    ['login','register','app'].forEach(s => {
+      const el = document.getElementById('screen-' + s);
+      if (s === name) {
+        el.classList.remove('hidden');
+        if (s === 'app') el.classList.add('active');
+      } else {
+        if (s === 'app') el.classList.remove('active');
+        else el.classList.add('hidden');
+      }
+    });
+  }
+
+  // ===== AUTH =====
+  function doLogin() {
+    const user = document.getElementById('login-user').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const err = document.getElementById('login-error');
+
+    if (!user || !pass) { err.textContent = 'Por favor llena todos los campos.'; err.classList.remove('hidden'); return; }
+    if (!state.users[user]) { err.textContent = 'Usuario no encontrado. Regístrate primero.'; err.classList.remove('hidden'); return; }
+    if (state.users[user].pass !== btoa(pass)) { err.textContent = 'Contraseña incorrecta.'; err.classList.remove('hidden'); return; }
+
+    err.classList.add('hidden');
+    state.currentUser = user;
+    loadData();
+    enterApp();
+  }
+
+  function doRegister() {
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const pos = document.getElementById('reg-pos').value;
+    const pass = document.getElementById('reg-pass').value;
+
+    if (!name || !email || !pass) { showToast('⚠️ Llena todos los campos'); return; }
+    if (pass.length < 6) { showToast('⚠️ Contraseña muy corta'); return; }
+    if (state.users[email]) { showToast('⚠️ Ese correo ya está registrado'); return; }
+
+    state.users[email] = { name, email, pos, pass: btoa(pass) };
+    saveUsers();
+    state.currentUser = email;
+    loadData();
+    showToast('✅ Cuenta creada');
+    setTimeout(() => enterApp(), 500);
+  }
+
+  function enterApp() {
+    const u = state.users[state.currentUser];
+    const initial = u.name.charAt(0).toUpperCase();
+    document.getElementById('top-avatar').textContent = initial;
+    document.getElementById('top-name').textContent = u.name.split(' ')[0];
+    document.getElementById('hero-name').textContent = u.name;
+    document.getElementById('hero-pos').textContent = u.pos || 'Jugador';
+    document.getElementById('pf-avatar').textContent = initial;
+    document.getElementById('pf-name').textContent = u.name;
+    document.getElementById('pf-pos').textContent = u.pos || '';
+    document.getElementById('pf-pos2').textContent = u.pos || '—';
+    document.getElementById('pf-email').textContent = u.email;
+    showScreen('app');
+    goToPage('home');
+    updateAll();
+  }
+
+  function doLogout() {
+    state.currentUser = null;
+    state.trainings = [];
+    state.matches = [];
+    showScreen('login');
+    document.getElementById('login-user').value = '';
+    document.getElementById('login-pass').value = '';
+  }
+
+  // ===== NAVIGATION =====
+  function goToPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    const nav = document.getElementById('nav-' + name);
+    if (nav) nav.classList.add('active');
+    window.scrollTo(0, 0);
+    updateAll();
+  }
+
+  // ===== TRAINING =====
+  function addTraining() {
+    const nombre = document.getElementById('t-nombre').value.trim();
+    const fecha = document.getElementById('t-fecha').value;
+    const hora = document.getElementById('t-hora').value;
+    const tipo = document.getElementById('t-tipo').value;
+    const notas = document.getElementById('t-notas').value.trim();
+    if (!nombre || !fecha) { showToast('⚠️ Nombre y fecha son obligatorios'); return; }
+    state.trainings.push({ id: Date.now(), nombre, fecha, hora, tipo, notas });
+    state.trainings.sort((a,b) => a.fecha.localeCompare(b.fecha));
+    saveData();
+    document.getElementById('t-nombre').value = '';
+    document.getElementById('t-fecha').value = '';
+    document.getElementById('t-hora').value = '';
+    document.getElementById('t-tipo').value = '';
+    document.getElementById('t-notas').value = '';
+    renderTrainings();
+    showToast('✅ Entrenamiento guardado');
+  }
+
+  function renderTrainings() {
+    const list = document.getElementById('training-list');
+    if (!state.trainings.length) {
+      list.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:10px;">Aún no hay entrenamientos registrados.</div>';
+      return;
+    }
+    list.innerHTML = state.trainings.map(t => {
+      const d = new Date(t.fecha + 'T12:00:00');
+      const day = d.getDate();
+      const mon = d.toLocaleString('es',{month:'short'}).toUpperCase();
+      const typeColor = t.tipo === 'Físico' ? 'badge-red' : t.tipo === 'Táctica' ? 'badge-blue' : t.tipo === 'Técnica' ? 'badge-yellow' : 'badge-green';
+      return `<div class="training-item">
+        <div class="training-date-box">
+          <span class="training-day">${day}</span>
+          <span class="training-month">${mon}</span>
+        </div>
+        <div class="training-info">
+          <div class="training-name">${t.nombre}</div>
+          <div class="training-time">${t.hora ? t.hora + ' hrs' : 'Sin hora'} ${t.tipo ? '· <span class="badge ' + typeColor + '">' + t.tipo + '</span>' : ''}</div>
+          ${t.notas ? '<div style="font-size:12px;color:var(--muted);margin-top:4px;">' + t.notas + '</div>' : ''}
+        </div>
+        <button onclick="deleteTraining(${t.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;padding:4px;">🗑️</button>
+      </div>`;
+    }).join('');
+  }
+
+  function deleteTraining(id) {
+    state.trainings = state.trainings.filter(t => t.id !== id);
+    saveData();
+    renderTrainings();
+    showToast('🗑️ Eliminado');
+  }
+
+  // ===== MATCHES =====
+  function addMatch() {
+    const rival = document.getElementById('m-rival').value.trim();
+    const fecha = document.getElementById('m-fecha').value;
+    const gF = parseInt(document.getElementById('m-goles-f').value) || 0;
+    const gC = parseInt(document.getElementById('m-goles-c').value) || 0;
+    const misGoles = parseInt(document.getElementById('m-mis-goles').value) || 0;
+    const asist = parseInt(document.getElementById('m-asist').value) || 0;
+    const mins = parseInt(document.getElementById('m-mins').value) || 0;
+    const tarjeta = document.getElementById('m-tarjeta').value;
+    if (!rival || !fecha) { showToast('⚠️ Rival y fecha son obligatorios'); return; }
+    const resultado = gF > gC ? 'victoria' : gF < gC ? 'derrota' : 'empate';
+    state.matches.push({ id: Date.now(), rival, fecha, gF, gC, misGoles, asist, mins, tarjeta, resultado });
+    state.matches.sort((a,b) => b.fecha.localeCompare(a.fecha));
+    saveData();
+    ['m-rival','m-fecha','m-goles-f','m-goles-c','m-mis-goles','m-asist','m-mins'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('m-tarjeta').value = 'ninguna';
+    renderMatches();
+    updateStats();
+    showToast('✅ Partido registrado');
+  }
+
+  function renderMatches() {
+    const list = document.getElementById('match-list');
+    if (!state.matches.length) {
+      list.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:10px;">Aún no hay partidos registrados.</div>';
+      return;
+    }
+    list.innerHTML = state.matches.map(m => {
+      const d = new Date(m.fecha + 'T12:00:00');
+      const dateStr = d.toLocaleDateString('es',{day:'numeric',month:'long',year:'numeric'});
+      const resBadge = m.resultado === 'victoria' ? 'badge-green' : m.resultado === 'derrota' ? 'badge-red' : 'badge-yellow';
+      const resText = m.resultado === 'victoria' ? 'VICTORIA' : m.resultado === 'derrota' ? 'DERROTA' : 'EMPATE';
+      const card = m.tarjeta === 'amarilla' ? '🟡' : m.tarjeta === 'roja' ? '🔴' : '';
+      return `<div class="match-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div class="match-date">📅 ${dateStr}</div>
+          <span class="badge ${resBadge}">${resText}</span>
+        </div>
+        <div class="match-teams">
+          <div class="match-team">
+            <div class="match-team-badge">🟢</div>
+            <div class="match-team-name">Mi Equipo</div>
+          </div>
+          <div class="match-score">${m.gF} - ${m.gC}</div>
+          <div class="match-team">
+            <div class="match-team-badge">🔵</div>
+            <div class="match-team-name">${m.rival}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;border-top:1px solid var(--border);padding-top:10px;margin-top:4px;">
+          <span style="font-size:13px;">⚽ ${m.misGoles} gol${m.misGoles!==1?'es':''}</span>
+          <span style="font-size:13px;">🎯 ${m.asist} asist.</span>
+          <span style="font-size:13px;">⏱️ ${m.mins} min</span>
+          ${card ? '<span style="font-size:13px;">'+card+' Tarjeta</span>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function deleteMatch(id) {
+    state.matches = state.matches.filter(m => m.id !== id);
+    saveData();
+    renderMatches();
+    updateStats();
+    showToast('🗑️ Eliminado');
+  }
+
+  // ===== STATS =====
+  function updateStats() {
+    const total = state.matches.length;
+    const goles = state.matches.reduce((s,m) => s + m.misGoles, 0);
+    const asist = state.matches.reduce((s,m) => s + m.asist, 0);
+    const mins = state.matches.reduce((s,m) => s + m.mins, 0);
+    const victorias = state.matches.filter(m => m.resultado === 'victoria').length;
+    const amarillas = state.matches.filter(m => m.tarjeta === 'amarilla').length;
+    const rojas = state.matches.filter(m => m.tarjeta === 'roja').length;
+
+    ['st-goles','hs-goles'].forEach(id => document.getElementById(id).textContent = goles);
+    ['st-asist','hs-asist'].forEach(id => document.getElementById(id).textContent = asist);
+    ['st-mins','hs-mins'].forEach(id => document.getElementById(id).textContent = mins);
+    document.getElementById('st-victorias').textContent = victorias;
+    document.getElementById('st-amarillas').textContent = amarillas;
+    document.getElementById('st-rojas').textContent = rojas;
+    document.getElementById('hs-partidos').textContent = total;
+    document.getElementById('pf-matches').textContent = total;
+    document.getElementById('pf-trainings').textContent = state.trainings.length;
+    document.getElementById('qc-matches').textContent = total + ' partido' + (total !== 1 ? 's' : '');
+    document.getElementById('qc-trainings').textContent = state.trainings.length + ' registrado' + (state.trainings.length !== 1 ? 's' : '');
+
+    const gpp = total ? (goles / total).toFixed(1) : '0.0';
+    const app = total ? (asist / total).toFixed(1) : '0.0';
+    const winpct = total ? Math.round(victorias / total * 100) : 0;
+    document.getElementById('pg-goles').textContent = gpp;
+    document.getElementById('pg-asist').textContent = app;
+    document.getElementById('pg-wins').textContent = winpct + '%';
+    document.getElementById('pb-goles').style.width = Math.min(parseFloat(gpp) * 25, 100) + '%';
+    document.getElementById('pb-asist').style.width = Math.min(parseFloat(app) * 25, 100) + '%';
+    document.getElementById('pb-wins').style.width = winpct + '%';
+  }
+
+  function updateNextEvent() {
+    const today = new Date().toISOString().slice(0,10);
+    const upcoming = [
+      ...state.trainings.filter(t => t.fecha >= today).map(t => ({...t, tipo2: 'entrenamiento'})),
+      ...state.matches.filter(m => m.fecha >= today).map(m => ({...m, nombre: 'vs ' + m.rival, tipo2: 'partido'}))
+    ].sort((a,b) => a.fecha.localeCompare(b.fecha));
+
+    const el = document.getElementById('next-event');
+    if (!upcoming.length) {
+      el.innerHTML = '<div style="color:var(--muted);font-size:13px;">No hay eventos próximos.</div>';
+      return;
+    }
+    const e = upcoming[0];
+    const d = new Date(e.fecha + 'T12:00:00');
+    const dateStr = d.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'});
+    const icon = e.tipo2 === 'partido' ? '⚽' : '🏃';
+    const badge = e.tipo2 === 'partido' ? 'badge-green' : 'badge-blue';
+    el.innerHTML = `<div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:28px;">${icon}</span>
+      <div>
+        <div style="font-weight:700;font-size:15px;">${e.nombre}</div>
+        <div style="font-size:12px;color:var(--muted);">📅 ${dateStr} ${e.hora ? '· ' + e.hora : ''}</div>
+        <span class="badge ${badge}" style="margin-top:5px;display:inline-block;">${e.tipo2.toUpperCase()}</span>
+      </div>
+    </div>`;
+  }
+
+  function updateAll() {
+    renderTrainings();
+    renderMatches();
+    updateStats();
+    updateNextEvent();
+  }
+
+  // Auto-check session
+  window.onload = () => {
+    const lastUser = localStorage.getItem('fp_last_user');
+    if (lastUser && state.users[lastUser]) {
+      // don't auto-login, just pre-fill
+      document.getElementById('login-user').value = lastUser;
+    }
+  };
+</script>
+</body>
+</html>
